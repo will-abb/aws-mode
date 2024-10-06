@@ -79,7 +79,7 @@ SERVICE represents the currently active service"
   "Create a buffer with NAME if not exists and switch to it."
   (unless (get-buffer name)
     (get-buffer-create name))
-    (pop-to-buffer-same-window name))
+  (pop-to-buffer-same-window name))
 
 (defun aws-cmd (&optional profile)
   "Create the AWS base cmd with the right profile.
@@ -93,6 +93,7 @@ aws-profile is used."
                 " -- aws ")
       (concat "aws --profile " profile))))
 
+;;;###autoload
 (defun aws-select-profile ()
   "Select the active AWS Profile."
   (interactive)
@@ -100,12 +101,14 @@ aws-profile is used."
    "Select profile: "
    (split-string (shell-command-to-string "aws configure list-profiles") "\n")))
 
+;;;###autoload
 (defun aws-set-profile ()
   "Set active AWS Profile."
   (interactive)
   (setq aws-profile (aws-select-profile))
   (aws--last-view))
 
+;;;###autoload
 (defun aws-quit ()
   "Quits the aws major mode by killing all it's open buffers."
   (interactive)
@@ -117,6 +120,7 @@ aws-profile is used."
       (dolist (buffer-name aws-buffers)
         (kill-buffer buffer-name)))))
 
+;;;###autoload
 (defun aws--list-services ()
   "List available aws services."
   (interactive)
@@ -136,6 +140,7 @@ aws-profile is used."
     (tabulated-list-print)
     (hl-line-mode 1)))
 
+;;;###autoload
 (defun aws-get-service ()
   "Call the respective aws service view, based on the current tabulated-list entry."
   (interactive)
@@ -151,6 +156,7 @@ aws-profile is used."
           ((equal service "s3") (aws-s3))
           (t (message "Hello")))))
 
+;;;###autoload
 (defun aws--get-view-mode ()
   "Return the fitting view mode for aws-output."
   (cond ((equal aws-output "yaml") (aws-view-yaml-mode))
@@ -166,6 +172,7 @@ aws-profile is used."
         (aws--vault-login profile))
     (message "NOT SUPPORTED")))
 
+;;;###autoload
 (defun aws-login-current-account ()
   "Login to the AWS Console with the current profile."
   (interactive)
@@ -196,6 +203,7 @@ aws-profile is used."
     map))
 
 ;; MODE DEFINITION
+;;;###autoload
 (defun aws ()
   "Open AWS Major Mode.  This presents a service overview."
   (interactive)
